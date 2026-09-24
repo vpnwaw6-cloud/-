@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>มังกร ภูผาม่าน — ชำระเงิน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Noto+Serif+Thai:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#0c0f14;
+    --bg-1:#12161d;
+    --card:#161b23;
+    --line: rgba(200,190,170,0.14);
+    --ink:#eee9df;
+    --ink-dim:#9aa1ad;
+    --ink-faint:#6b7280;
+    --accent:#c8935a;
+    --accent-soft: rgba(200,147,90,0.16);
+    --accent-hue: 0deg;
+    --accent-sat: 100%;
+    --gold:#c8935a;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(200,147,90,0.10), transparent 60%),
+      linear-gradient(180deg, var(--bg-0), var(--bg-1) 60%, var(--bg-0));
+    min-height:100vh;
+    font-family:'Noto Sans Thai','Noto Serif Thai',sans-serif;
+    color:var(--ink);
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:56px 20px 80px;
+    position:relative;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, transparent 1px, transparent 2px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0px, transparent 1px, transparent 2px);
+    pointer-events:none;
+  }
+
+  .wrap{ width:100%; max-width:460px; position:relative; z-index:1; }
+
+  /* ---------- Header / brand ---------- */
+  .brand{ text-align:center; margin-bottom:26px; }
+  .brand img{
+    width:132px; height:132px; object-fit:contain;
+    filter: hue-rotate(var(--accent-hue)) saturate(var(--accent-sat));
+    transition: filter .5s ease;
+    display:block; margin:0 auto 8px;
+  }
+  .brand .th-name{
+    font-family:'Noto Serif Thai', serif;
+    font-weight:600;
+    font-size:26px;
+    letter-spacing:0.02em;
+    color:var(--ink);
+    margin:2px 0 2px;
+  }
+  .brand .en-name{
+    font-family:'Cinzel', serif;
+    font-weight:500;
+    font-size:11.5px;
+    letter-spacing:0.32em;
+    color:var(--accent);
+    text-transform:uppercase;
+    transition: color .5s ease;
+  }
+  .brand .tagline{
+    font-size:12.5px;
+    color:var(--ink-faint);
+    margin-top:10px;
+    letter-spacing:0.02em;
+  }
+
+  /* ---------- Card ---------- */
+  .card{
+    background: linear-gradient(180deg, var(--card), #12151b);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:30px 26px 26px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.02) inset;
+    position:relative;
+  }
+  .card::before{
+    content:"";
+    position:absolute; left:26px; right:26px; top:0;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity:0.55;
+    transition: background .5s ease;
+  }
+
+  .section-label{
+    font-size:11px;
+    letter-spacing:0.14em;
+    color:var(--ink-faint);
+    text-transform:uppercase;
+    margin:0 0 10px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .section-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  /* ---------- amount ---------- */
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block; font-size:12px; color:var(--ink-dim); margin-bottom:6px;
+  }
+  .field input{
+    width:100%;
+    background:#0f1319;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:11px 13px;
+    color:var(--ink);
+    font-size:14px;
+    font-family:'Noto Sans Thai',sans-serif;
+    outline:none;
+  }
+  .field input:focus, .field textarea:focus{ border-color:var(--accent); }
+  .field textarea{
+    width:100%;
+    background:#0f1319;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:11px 13px;
+    color:var(--ink);
+    font-size:14px;
+    font-family:'Noto Sans Thai',sans-serif;
+    outline:none;
+    resize:vertical;
+    line-height:1.6;
+  }
+  .field textarea::placeholder{ color:var(--ink-faint); opacity:0.7; }
+
+  .notice{
+    background: linear-gradient(180deg, rgba(255,255,255,0.025), transparent);
+    border:1px solid var(--line);
+    border-left:2.5px solid var(--accent);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:20px;
+    transition: border-color .5s ease;
+  }
+  .notice p{
+    margin:0 0 9px;
+    font-size:12.5px;
+    line-height:1.75;
+    color:var(--ink-dim);
+  }
+  .notice p:last-child{ margin-bottom:0; }
+  .notice b{ color:var(--ink); font-weight:600; }
+
+  /* ---------- QR mock ---------- */
+  .qr-zone{
+    margin:22px 0 20px;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .qr-frame{
+    width:192px; height:192px;
+    border-radius:16px;
+    border:1.5px dashed var(--accent);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    transition: border-color .5s ease;
+  }
+  .qr-frame .corner{
+    position:absolute; width:18px; height:18px;
+    border-color:var(--accent);
+    transition: border-color .5s ease;
+  }
+  .qr-frame .c1{ top:-1.5px; left:-1.5px; border-top:2.5px solid; border-left:2.5px solid; border-radius:6px 0 0 0;}
+  .qr-frame .c2{ top:-1.5px; right:-1.5px; border-top:2.5px solid; border-right:2.5px solid; border-radius:0 6px 0 0;}
+  .qr-frame .c3{ bottom:-1.5px; left:-1.5px; border-bottom:2.5px solid; border-left:2.5px solid; border-radius:0 0 0 6px;}
+  .qr-frame .c4{ bottom:-1.5px; right:-1.5px; border-bottom:2.5px solid; border-right:2.5px solid; border-radius:0 0 6px 0;}
+  .qr-placeholder-text{
+    font-size:12px; color:var(--ink-faint); text-align:center; line-height:1.6; padding:0 18px;
+  }
+  .qr-note{
+    font-size:11.5px; color:var(--ink-faint); margin-top:12px; text-align:center; max-width:280px; line-height:1.6;
+  }
+  .qr-note b{ color:var(--ink-dim); font-weight:500; }
+
+  /* ---------- theme swatches ---------- */
+  .theme-row{
+    display:flex; gap:10px; justify-content:center; margin:4px 0 24px;
+  }
+  .swatch{
+    width:26px; height:26px; border-radius:50%;
+    cursor:pointer; border:2px solid transparent;
+    position:relative;
+    transition: transform .15s ease, border-color .2s ease;
+  }
+  .swatch:hover{ transform:translateY(-2px); }
+  .swatch.active{ border-color:var(--ink); }
+  .swatch.active::after{
+    content:"";
+    position:absolute; inset:-5px;
+    border:1px solid var(--line);
+    border-radius:50%;
+  }
+
+  /* ---------- CTA ---------- */
+  .pay-btn{
+    width:100%;
+    background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 75%, black));
+    color:#0c0f14;
+    border:none; border-radius:12px;
+    padding:15px 18px;
+    font-family:'Noto Sans Thai',sans-serif;
+    font-weight:600; font-size:15px;
+    letter-spacing:0.02em;
+    cursor:pointer;
+    transition: filter .5s ease, transform .1s ease;
+  }
+  .pay-btn:active{ transform:scale(0.99); }
+  .pay-btn .en{
+    display:block; font-family:'Cinzel',serif; font-size:9.5px; letter-spacing:0.22em;
+    font-weight:500; margin-top:3px; opacity:0.75;
+  }
+
+  .secure-row{
+    display:flex; align-items:center; justify-content:center; gap:7px;
+    margin-top:16px; font-size:11px; color:var(--ink-faint);
+  }
+  .secure-row svg{ width:12px; height:12px; opacity:0.6; }
+
+  .divider-orn{
+    text-align:center; color:var(--ink-faint); font-size:12px; margin:20px 0 16px; letter-spacing:0.3em;
+    opacity:0.5;
+  }
+
+  .footer{
+    text-align:center; margin-top:30px; font-size:11px; color:var(--ink-faint); line-height:2;
+  }
+  .footer a{ color:var(--accent); text-decoration:none; transition:color .5s ease; }
+
+  .badge{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:10.5px; color:var(--accent);
+    background:var(--accent-soft);
+    border:1px solid var(--line);
+    padding:5px 12px; border-radius:99px;
+    margin-bottom:18px;
+    letter-spacing:0.08em;
+    transition: color .5s ease, background .5s ease;
+  }
+  .badge-wrap{ text-align:center; }
+
+  @media (max-width:420px){
+    .card{ padding:24px 18px 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <img src="data:image/jpeg;base64,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" alt="มังกร ภูผาม่าน">
+    <div class="th-name">มังกร ภูผาม่าน</div>
+    <div class="en-name">Mungkorn Phuphaman</div>
+    <div class="tagline">รีสอร์ท ท่ามกลางขุนเขาและสายหมอก</div>
+  </div>
+
+  <div class="badge-wrap">
+    <span class="badge">
+      &#9670;&nbsp; แบบร่างหน้าชำระเงิน (Mockup)
+    </span>
+  </div>
+
+  <div class="card">
+    <div class="section-label">ข้อมูลผู้ชำระเงิน</div>
+    <div class="field">
+      <label>ชื่อผู้เข้าพัก / Guest name</label>
+      <input type="text" id="guestName" placeholder="เช่น คุณสมชาย ใจดี">
+    </div>
+    <div class="field">
+      <label>เบอร์โทรศัพท์ / Phone number</label>
+      <input type="tel" id="guestPhone" placeholder="เช่น 08X-XXX-XXXX">
+    </div>
+    <div class="notice">
+      <p>( ส่งหลักฐานเข้ามาเพื่อยืนยันการจองที่พักด้วยนะคะ )</p>
+      <p>📢 <b>บันทึกช่วยจำ</b> - ผู้จองรายใหม่ + ชื่อผู้จอง<br>
+      กรุณาระบุตามที่แจ้ง เพื่อให้ระบบสามารถออกใบเสร็จรับเงินได้อย่างถูกต้อง หากชำระแล้วแอดมินขอสลิปยืนยันการจองเพื่อลงระบบและออกใบรับเสร็จการจองให้ค่ะ 🧾</p>
+      <p>( มีค่าประกันห้องพัก 1,000 บาททุกหลัง )</p>
+    </div>
+
+    <div class="section-label" style="margin-top:22px;">สแกนเพื่อชำระเงิน</div>
+    <div class="qr-zone">
+      <div class="qr-frame">
+        <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        <div class="qr-placeholder-text">วาง QR Code<br>พร้อมเพย์ของคุณ<br>ตรงนี้</div>
+      </div>
+      <div class="qr-note">แนบไฟล์รูป <b>QR Code พร้อมเพย์ / บัญชีธนาคาร</b> ของรีสอร์ทแทนกรอบเส้นประนี้</div>
+    </div>
+
+    <div class="section-label">ธีมสีของหน้านี้</div>
+    <div class="theme-row" id="themeRow"></div>
+
+    <button class="pay-btn" id="notifyBtn" onclick="submitBooking(); return false;">
+      แจ้งพนักงานเพื่อรับใบเสร็จ
+      <span class="en">NOTIFY STAFF FOR RECEIPT</span>
+    </button>
+    <div id="statusMsg" style="text-align:center;font-size:12.5px;margin-top:12px;color:var(--ink-dim);"></div>
+
+    <div class="secure-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+      ข้อมูลการชำระเงินของท่านถูกเก็บเป็นความลับ
+    </div>
+  </div>
+
+  <div class="divider-orn">&#10022;</div>
+
+  <div class="footer">
+    มังกร ภูผาม่าน รีสอร์ท<br>
+    มีข้อสงสัยติดต่อ <a href="#">LINE Official</a> หรือโทร 08X-XXX-XXXX
+  </div>
+
+</div>
+
+<script>
+  const themes = [
+    { name: 'ทอง-บรอนซ์',  hex: '#c8935a', hue: 0,   sat: 100 },
+    { name: 'เขียวมรกต',   hex: '#3fae72', hue: 100, sat: 140 },
+    { name: 'น้ำเงินไพลิน', hex: '#4a90c9', hue: 175, sat: 140 },
+    { name: 'แดงทับทิม',   hex: '#c9584f', hue: 330, sat: 150 },
+    { name: 'ม่วงราชวงศ์', hex: '#9b6fd6', hue: 250, sat: 140 },
+    { name: 'ชมพูโรสโกลด์', hex: '#d68aa0', hue: 300, sat: 110 },
+  ];
+
+  const row = document.getElementById('themeRow');
+  const root = document.documentElement.style;
+
+  function applyTheme(t, el){
+    root.setProperty('--accent', t.hex);
+    root.setProperty('--accent-soft', t.hex + '29');
+    root.setProperty('--accent-hue', t.hue + 'deg');
+    root.setProperty('--accent-sat', t.sat + '%');
+    document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  themes.forEach((t, i) => {
+    const sw = document.createElement('div');
+    sw.className = 'swatch' + (i === 0 ? ' active' : '');
+    sw.style.background = t.hex;
+    sw.title = t.name;
+    sw.onclick = () => applyTheme(t, sw);
+    row.appendChild(sw);
+  });
+
+  // ---------- Backend: ส่งข้อมูลจองไป Google Apps Script ----------
+  // 1) ทำตามขั้นตอนติดตั้ง Apps Script (ดูคำอธิบายที่ให้มาพร้อมไฟล์นี้)
+  // 2) นำ URL ของ Web App ที่ deploy แล้วมาใส่แทนค่าด้านล่าง
+  const APPS_SCRIPT_URL = "วาง_URL_WEB_APP_ตรงนี้"; // เช่น https://script.google.com/macros/s/AKfycb.../exec
+
+  async function submitBooking(){
+    const nameEl = document.getElementById('guestName');
+    const phoneEl = document.getElementById('guestPhone');
+    const statusEl = document.getElementById('statusMsg');
+    const btn = document.getElementById('notifyBtn');
+
+    const name = nameEl.value.trim();
+    const phone = phoneEl.value.trim();
+
+    if(!name || !phone){
+      statusEl.textContent = 'กรุณากรอกชื่อและเบอร์โทรศัพท์ให้ครบก่อนนะคะ';
+      statusEl.style.color = '#c9584f';
+      return;
+    }
+
+    if(APPS_SCRIPT_URL.includes('วาง_URL')){
+      statusEl.textContent = 'ยังไม่ได้เชื่อมต่อระบบหลังบ้าน (ใส่ APPS_SCRIPT_URL ในโค้ดก่อน)';
+      statusEl.style.color = '#c9584f';
+      return;
+    }
+
+    btn.disabled = true;
+    statusEl.style.color = 'var(--ink-dim)';
+    statusEl.textContent = 'กำลังส่งข้อมูล...';
+
+    try{
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Apps Script Web App มักต้องใช้ no-cors จากฝั่ง client
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ name, phone, timestamp: new Date().toISOString() })
+      });
+      statusEl.textContent = 'ส่งข้อมูลเรียบร้อยแล้วค่ะ แอดมินจะติดต่อกลับเร็วๆ นี้';
+      statusEl.style.color = '#3fae72';
+    }catch(err){
+      statusEl.textContent = 'ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง';
+      statusEl.style.color = '#c9584f';
+    }finally{
+      btn.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>
